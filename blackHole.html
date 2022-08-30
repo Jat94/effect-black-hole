@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <link rel="stylesheet" href="https://static.eldorado.ru/promo/default/css/normalize.css">
+        <link rel="stylesheet" href="https://static.eldorado.ru/static/css/redesign3/css1_core.css">
+        <link rel="stylesheet" href="https://static.eldorado.ru/promo/default/css/fonts.css">
+        <link rel="stylesheet" href="css/style.css">
+        <style>
+            body {
+                overflow: hidden;
+            }
+            .prm-star-container {
+                width: 100vw;
+                height: 100vh;
+                background-color: black;
+            }
+            .prm-star {
+                border-radius: 50%;
+                background-color: #ece8d1;
+                position: absolute;
+                left: 50%;
+                pointer-events: none;
+                transition: background ease 3s;
+            }
+
+            .prm-star.color1 {
+                background-color: #eee8c7;
+            }
+            .prm-star.color2 {
+                background-color: #c1d8b7;
+            }
+            .prm-star.color3 {
+                background-color: #edccf3;
+            }
+            .prm-star.color4 {
+                background-color: #c7cee6;
+            }
+            .prm-star.color5 {
+                background-color: #ebd1d1;
+            }
+            .prm-star.color6 {
+                background-color: #d3e9e2;
+            }
+            .prm-star.color7 {
+                background-color: #e9e0da;
+            }
+            .prm-star.color8 {
+                background-color: #d4d4c4;
+            }
+            .prm-star.color9 {
+                background-color: #c8dae6;
+            }
+            .prm-star.color10 {
+                background-color: #d5cde7;
+            }
+
+            .prm-star.prm-in-hole {
+                background-color: #c9b339;
+                transition: background ease .4s;
+            }
+
+        </style>
+    </head>
+    <body>
+       
+        <div class="prm-star-container"></div>
+        <script>
+            'use strict';
+            const screenWidth = document.body.clientWidth;
+            const screenHeight = document.body.clientHeight;
+
+            for (let i=0; i<screenWidth; i++) {
+                const star =  document.createElement('div');
+                star.classList.add('prm-star');
+                star.style.left = getRandomArbitrary(0, screenWidth) + 'px';
+                star.style.top = getRandomArbitrary(0, screenHeight) + 'px';
+
+                const starSize = getRandomArbitrary(0, 6);
+
+                star.style.width = starSize + 'px';
+                star.style.height = starSize + 'px';
+
+                const starColor = getRandomArbitrary(1, 10);
+                star.classList.add(`color${starColor}`)
+
+                star.style.opacity = getRandomArbitrary(0, 10)/10;
+
+                document.querySelector('.prm-star-container').append(star);
+            }
+
+            blackHole('.prm-star', 120);
+
+            function blackHole(selector, radius=100) {
+                let blocks = document.querySelectorAll(selector);
+                blocks.forEach(block => {
+                    let pointX = block.style.left;
+                    pointX = parseInt(pointX, 10)
+                    let pointY = block.style.top;
+                    pointY = parseInt(pointY, 10)
+
+                    const container = document.querySelector('body');
+                    container.addEventListener('mousemove', e=>{
+
+                        let mouseX = e.offsetX;
+                        let mouseY = e.offsetY;
+                        let R = radius;
+
+                        if (Math.pow((pointX - mouseX), 2) + Math.pow((pointY - mouseY), 2) <= Math.pow(R, 2)) {
+                            
+                            let d = Math.sqrt((pointX - mouseX)**2 + (pointY - mouseY)**2);
+                            let X = mouseX + (pointX - mouseX) / d * R;
+                            let Y = mouseY + (pointY - mouseY) / d * R;
+
+                            console.log(`mouseX: ${mouseX} , mouseY: ${mouseY}, pointX: ${pointX} , pointY: ${pointY}`);
+                            console.log(`X: ${X} , Y: ${Y}`);
+                            
+                            block.style.left = X + 'px';
+                            block.style.top = Y + 'px';
+
+                            block.classList.add('prm-in-hole')
+                        } else {
+                            block.style.left = pointX + 'px';
+                            block.style.top = pointY + 'px';
+
+                            block.classList.remove('prm-in-hole')
+                        }
+                    });
+                });
+            }
+
+
+
+
+            function getRandomArbitrary(min, max) {
+            return (Math.random() * (max - min) + min).toFixed(0);
+            }
+
+
+        </script>
+    </body>
+</html>
